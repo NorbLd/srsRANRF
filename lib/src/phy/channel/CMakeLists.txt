@@ -21,4 +21,4 @@
 file(GLOB SOURCES "*.c" "*.cc")
 add_library(srsran_channel OBJECT ${SOURCES})
 
-add_subdirectory(test)
+#add_subdirectory(test)

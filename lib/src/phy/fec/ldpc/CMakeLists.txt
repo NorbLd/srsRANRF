@@ -51,4 +51,4 @@ set(FEC_SOURCES ${FEC_SOURCES} ${AVX2_SOURCES} ${AVX512_SOURCES}
         ldpc/ldpc_rm.c
         PARENT_SCOPE)
 
-add_subdirectory(test)
+#add_subdirectory(test)

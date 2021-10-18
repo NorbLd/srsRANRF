@@ -27,7 +27,7 @@ set(SOURCES arch_select.cc
             buffer_pool.cc
             crash_handler.cc
             gen_mch_tables.c
-            liblte_security.cc
+            #liblte_security.cc
             mac_pcap.cc
             mac_pcap_base.cc
             nas_pcap.cc
@@ -42,7 +42,7 @@ set(SOURCES arch_select.cc
             threads.c
             tti_sync_cv.cc
             time_prof.cc
-            version.c
+            #version.c
             zuc.cc
             s3g.cc
             basic_vnf.cc)

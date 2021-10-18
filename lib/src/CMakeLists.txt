@@ -20,9 +20,9 @@
 
 add_subdirectory(asn1)
 add_subdirectory(common)
-add_subdirectory(mac)
+#add_subdirectory(mac)
 add_subdirectory(phy)
 add_subdirectory(radio)
 add_subdirectory(srslog)
-add_subdirectory(system)
-add_subdirectory(upper)
+#add_subdirectory(system)
+#add_subdirectory(upper)

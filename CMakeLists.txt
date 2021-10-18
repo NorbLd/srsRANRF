@@ -36,16 +36,16 @@ message( STATUS "CMAKE_SYSTEM: " ${CMAKE_SYSTEM} )
 message( STATUS "CMAKE_SYSTEM_PROCESSOR: " ${CMAKE_SYSTEM_PROCESSOR} )
 message( STATUS "CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
-include(SRSRANVersion) #sets version information
-include(SRSRANPackage) #setup cpack
+#list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
+#include(SRSRANVersion) #sets version information
+#include(SRSRANPackage) #setup cpack
 
-include(CTest)
+#include(CTest)
 
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake"
-    IMMEDIATE @ONLY)
+#configure_file(
+#    "${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in"
+#    "${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake"
+#    IMMEDIATE @ONLY)
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
@@ -101,7 +101,7 @@ option(STOP_ON_WARNING       "Interrupt application on warning"         OFF)
 # loaded by bintools (ar, nm, ...). Older versions of bintools will not do
 # it automatically so it is necessary to use the gcc wrappers of the compiler
 # (gcc-ar, gcc-nm, ...).
-option(BUILD_WITH_LTO        "Enable LTO (experimental)"                OFF)
+#option(BUILD_WITH_LTO        "Enable LTO (experimental)"                OFF)
   
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
   set(GCC_ARCH armv8-a CACHE STRING "GCC compile for specific architecture.")
@@ -118,23 +118,23 @@ if (PARALLEL_COMPILE_JOBS)
   message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: Limiting compiler jobs to ${PARALLEL_COMPILE_JOBS}")
 endif ()
 
-if (ENABLE_SRSLOG_TRACING)
-  add_definitions(-DENABLE_SRSLOG_EVENT_TRACE)
-endif (ENABLE_SRSLOG_TRACING)
+#if (ENABLE_SRSLOG_TRACING)
+#  add_definitions(-DENABLE_SRSLOG_EVENT_TRACE)
+#endif (ENABLE_SRSLOG_TRACING)
 
-if (ASSERTS_ENABLED)
-  add_definitions(-DASSERTS_ENABLED)
-endif()
+#if (ASSERTS_ENABLED)
+#  add_definitions(-DASSERTS_ENABLED)
+#endif()
 
-if (STOP_ON_WARNING)
-  add_definitions(-DSTOP_ON_WARNING)
-endif()
+#if (STOP_ON_WARNING)
+#  add_definitions(-DSTOP_ON_WARNING)
+#endif()
 
 # Test for Atomics
-include(CheckAtomic)
-if(NOT HAVE_CXX_ATOMICS_WITHOUT_LIB OR NOT HAVE_CXX_ATOMICS64_WITHOUT_LIB)
-    set(ATOMIC_LIBS "atomic")
-endif()
+#include(CheckAtomic)
+#if(NOT HAVE_CXX_ATOMICS_WITHOUT_LIB OR NOT HAVE_CXX_ATOMICS64_WITHOUT_LIB)
+#    set(ATOMIC_LIBS "atomic")
+#endif()
 
 ########################################################################
 # Find dependencies
@@ -156,97 +156,50 @@ endif()
 find_package(Threads REQUIRED)
 
 # FFT
-if(USE_MKL)
-  find_package(MKL REQUIRED)
-  include_directories(${MKL_INCLUDE_DIRS})
-  link_directories(${MKL_LIBRARY_DIRS})
-  set(FFT_LIBRARIES "${MKL_STATIC_LIBRARIES}") # Static by default
-else(USE_MKL)
-  find_package(FFTW3F REQUIRED)
-  if(FFTW3F_FOUND)
-    include_directories(${FFTW3F_INCLUDE_DIRS})
-    link_directories(${FFTW3F_LIBRARY_DIRS})
-    if(BUILD_STATIC)
-      set(FFT_LIBRARIES "${FFTW3F_STATIC_LIBRARIES}")
-    else(BUILD_STATIC)
-      set(FFT_LIBRARIES "${FFTW3F_LIBRARIES}")
-    endif(BUILD_STATIC)
-    message(STATUS "FFT_LIBRARIES: " ${FFT_LIBRARIES})
-  endif(FFTW3F_FOUND)
-endif(USE_MKL)
+#if(USE_MKL)
+#  find_package(MKL REQUIRED)
+#  include_directories(${MKL_INCLUDE_DIRS})
+#  link_directories(${MKL_LIBRARY_DIRS})
+#  set(FFT_LIBRARIES "${MKL_STATIC_LIBRARIES}") # Static by default
+#else(USE_MKL)
+#  find_package(FFTW3F REQUIRED)
+#  if(FFTW3F_FOUND)
+#    include_directories(${FFTW3F_INCLUDE_DIRS})
+#    link_directories(${FFTW3F_LIBRARY_DIRS})
+#    if(BUILD_STATIC)
+#      set(FFT_LIBRARIES "${FFTW3F_STATIC_LIBRARIES}")
+#    else(BUILD_STATIC)
+#      set(FFT_LIBRARIES "${FFTW3F_LIBRARIES}")
+#    endif(BUILD_STATIC)
+#    message(STATUS "FFT_LIBRARIES: " ${FFT_LIBRARIES})
+#  endif(FFTW3F_FOUND)
+#endif(USE_MKL)
 
 # Crypto
-find_package(Polarssl)
-if (POLARSSL_FOUND)
-  set(SEC_INCLUDE_DIRS "${POLARSSL_INCLUDE_DIRS}")
-  if(BUILD_STATIC)
-    set(SEC_LIBRARIES    "${POLARSSL_STATIC_LIBRARIES}")
-  else(BUILD_STATIC)
-    set(SEC_LIBRARIES    "${POLARSSL_LIBRARIES}")
-  endif(BUILD_STATIC)
-  add_definitions(-DHAVE_POLARSSL)
-else(POLARSSL_FOUND)
-  find_package(MbedTLS REQUIRED)
-  if (MBEDTLS_FOUND)
-    set(SEC_INCLUDE_DIRS "${MBEDTLS_INCLUDE_DIRS}")
-    if(BUILD_STATIC)
-      set(SEC_LIBRARIES    "${MBEDTLS_STATIC_LIBRARIES}")
-    else(BUILD_STATIC)
-      set(SEC_LIBRARIES    "${MBEDTLS_LIBRARIES}")
-    endif(BUILD_STATIC)
-    add_definitions(-DHAVE_MBEDTLS)
-  else(MBEDTLS_FOUND)
-    message(FATAL_ERROR "Either PolarSSL or mbedTLS are required to build srsRAN")
-  endif (MBEDTLS_FOUND)
-endif(POLARSSL_FOUND)
+#find_package(Polarssl)
+#if (POLARSSL_FOUND)
+#  set(SEC_INCLUDE_DIRS "${POLARSSL_INCLUDE_DIRS}")
+#  if(BUILD_STATIC)
+#    set(SEC_LIBRARIES    "${POLARSSL_STATIC_LIBRARIES}")
+#  else(BUILD_STATIC)
+#    set(SEC_LIBRARIES    "${POLARSSL_LIBRARIES}")
+#  endif(BUILD_STATIC)
+#  add_definitions(-DHAVE_POLARSSL)
+#else(POLARSSL_FOUND)
+#  find_package(MbedTLS REQUIRED)
+#  if (MBEDTLS_FOUND)
+#    set(SEC_INCLUDE_DIRS "${MBEDTLS_INCLUDE_DIRS}")
+#    if(BUILD_STATIC)
+#      set(SEC_LIBRARIES    "${MBEDTLS_STATIC_LIBRARIES}")
+#    else(BUILD_STATIC)
+#      set(SEC_LIBRARIES    "${MBEDTLS_LIBRARIES}")
+#    endif(BUILD_STATIC)
+#    add_definitions(-DHAVE_MBEDTLS)
+#  else(MBEDTLS_FOUND)
+#    message(FATAL_ERROR "Either PolarSSL or mbedTLS are required to build srsRAN")
+#  endif (MBEDTLS_FOUND)
+#endif(POLARSSL_FOUND)
 
-# Hard-SIM support
-if(ENABLE_HARDSIM)
-  find_package(PCSCLite)
-  if (PCSCLITE_FOUND)
-    message(STATUS "Building with PCSC support.")
-    add_definitions(-DHAVE_PCSC)
-    set(HAVE_PCSC TRUE)
-    include_directories(${PCSCLITE_INCLUDE_DIR})
-    #link_directories(${PCSCLITE_LIBRARIES})
-  endif (PCSCLITE_FOUND)
-endif(ENABLE_HARDSIM)
-
-# UHD
-if(ENABLE_UHD)
-  find_package(UHD)
-  if(UHD_FOUND)
-    include_directories(${UHD_INCLUDE_DIRS})
-    link_directories(${UHD_LIBRARY_DIRS})
-  endif(UHD_FOUND)
-endif(ENABLE_UHD)
-
-# BladeRF
-if(ENABLE_BLADERF)
-  find_package(bladeRF)
-  if(BLADERF_FOUND)
-    include_directories(${BLADERF_INCLUDE_DIRS})
-    link_directories(${BLADERF_LIBRARY_DIRS})
-  endif(BLADERF_FOUND)
-endif(ENABLE_BLADERF)
-
-# Soapy
-if(ENABLE_SOAPYSDR)
-  find_package(SoapySDR)
-  if(SOAPYSDR_FOUND)
-    include_directories(${SOAPYSDR_INCLUDE_DIRS})
-    link_directories(${SOAPYSDR_LIBRARY_DIRS})
-  endif(SOAPYSDR_FOUND)
-endif(ENABLE_SOAPYSDR)
-
-# ZeroMQ
-if(ENABLE_ZEROMQ)
-  find_package(ZeroMQ)
-  if(ZEROMQ_FOUND)
-    include_directories(${ZEROMQ_INCLUDE_DIRS})
-    link_directories(${ZEROMQ_LIBRARY_DIRS})
-  endif(ZEROMQ_FOUND)
-endif(ENABLE_ZEROMQ)
 
 # TimeProf
 if(ENABLE_TIMEPROF)
@@ -307,16 +260,6 @@ if (ENABLE_TTCN3)
   message(STATUS "Building with TTCN3 binaries")
 endif (ENABLE_TTCN3)
 
-# Backward-cpp
-find_package(Backward)
-if(Backward_FOUND)
-  if(BACKWARD_HAS_EXTERNAL_LIBRARIES)
-    add_definitions(-DHAVE_BACKWARD)
-    message(STATUS "Building with backward-cpp support")
-  else (BACKWARD_HAS_EXTERNAL_LIBRARIES)
-    message(STATUS "Backward-cpp found, but external libraries are missing.")
-  endif()
-endif()
 
 ########################################################################
 # Install Dirs
@@ -372,9 +315,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   ADD_C_COMPILER_FLAG_IF_AVAILABLE("-Wno-unused-but-set-variable" HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
   ADD_CXX_COMPILER_FLAG_IF_AVAILABLE("-Wno-unused-but-set-variable" HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
 
-  if (AUTO_DETECT_ISA)
-    find_package(SSE)
-  endif (AUTO_DETECT_ISA)
 
   if (HAVE_AVX2)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=${GCC_ARCH} -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE")
@@ -423,23 +363,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
     endif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 
-  if (USE_LTE_RATES)
-    message(STATUS "Using standard LTE sampling rates")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DFORCE_STANDARD_RATE")
-  endif (USE_LTE_RATES)
 
-  if (AUTO_DETECT_ISA)
-    find_package(SSE)
-  endif (AUTO_DETECT_ISA)
-  if (HAVE_AVX2)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${GCC_ARCH} -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE")
-  else (HAVE_AVX2)
-    if(HAVE_AVX)
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${GCC_ARCH} -mfpmath=sse -mavx -DLV_HAVE_AVX -DLV_HAVE_SSE")
-    elseif(HAVE_SSE)
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${GCC_ARCH} -mfpmath=sse -msse4.1 -DLV_HAVE_SSE")
-    endif(HAVE_AVX)
-  endif (HAVE_AVX2)
 
   if (HAVE_FMA)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfma -DLV_HAVE_FMA")
@@ -558,13 +482,13 @@ endif(ENABLE_TIDY)
 ########################################################################
 # Create uninstall targets
 ########################################################################
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+#configure_file(
+#    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+#    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+#    IMMEDIATE @ONLY)
 
-add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+#add_custom_target(uninstall
+#    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
 ########################################################################
 # Create optional target to build osmo-gsm-tester trial
@@ -587,23 +511,23 @@ message(STATUS "Building for version: ${VERSION}")
 # Ctest function helpers
 ########################################################################
 
-function(add_lte_test)
-  add_test(${ARGN})
-  set(TNAME ${ARGV0})
-  if(${TNAME} STREQUAL NAME)
-    set(TNAME ${ARGV1})
-  endif()
-  set_tests_properties(${TNAME} PROPERTIES LABELS "lte;${CTEST_LABELS}")
-endfunction()
+#function(add_lte_test)
+#  add_test(${ARGN})
+#  set(TNAME ${ARGV0})
+#  if(${TNAME} STREQUAL NAME)
+#    set(TNAME ${ARGV1})
+#  endif()
+#  set_tests_properties(${TNAME} PROPERTIES LABELS "lte;${CTEST_LABELS}")
+#endfunction()
 
-function(add_nr_test)
-  add_test(${ARGN})
-  set(TNAME ${ARGV0})
-  if(${TNAME} STREQUAL NAME)
-    set(TNAME ${ARGV1})
-  endif()
-  set_tests_properties(${TNAME} PROPERTIES LABELS "nr;${CTEST_LABELS}")
-endfunction()
+#function(add_nr_test)
+#  add_test(${ARGN})
+#  set(TNAME ${ARGV0})
+#  if(${TNAME} STREQUAL NAME)
+#    set(TNAME ${ARGV1})
+#  endif()
+#  set_tests_properties(${TNAME} PROPERTIES LABELS "nr;${CTEST_LABELS}")
+#endfunction()
 
 ########################################################################
 # Add general includes and dependencies
@@ -629,29 +553,29 @@ add_custom_target(add_srsran_headers SOURCES ${HEADERS_ALL})
 ########################################################################
 add_subdirectory(lib)
 
-if(RF_FOUND)
-  if(ENABLE_SRSUE)
-    message(STATUS "Building with srsUE")
-    add_subdirectory(srsue)
-  else(ENABLE_SRSUE)
-    message(STATUS "srsUE build disabled")
-  endif(ENABLE_SRSUE)
+#if(RF_FOUND)
+#  if(ENABLE_SRSUE)
+#    message(STATUS "Building with srsUE")
+#    add_subdirectory(srsue)
+#  else(ENABLE_SRSUE)
+#    message(STATUS "srsUE build disabled")
+#  endif(ENABLE_SRSUE)
 
-  if(ENABLE_SRSENB)
-    message(STATUS "Building with srsENB")
-    add_subdirectory(srsenb)
-  else(ENABLE_SRSENB)
-    message(STATUS "srsENB build disabled")
-  endif(ENABLE_SRSENB)
-else(RF_FOUND)
-  message(STATUS "srsUE and srsENB builds disabled due to missing RF driver")
-endif(RF_FOUND)
+#  if(ENABLE_SRSENB)
+#    message(STATUS "Building with srsENB")
+#    add_subdirectory(srsenb)
+#  else(ENABLE_SRSENB)
+#    message(STATUS "srsENB build disabled")
+#  endif(ENABLE_SRSENB)
+#else(RF_FOUND)
+#  message(STATUS "srsUE and srsENB builds disabled due to missing RF driver")
+#endif(RF_FOUND)
 
-if(ENABLE_SRSEPC)
-  message(STATUS "Building with srsEPC")
-  add_subdirectory(srsepc)
-else(ENABLE_SRSEPC)
-  message(STATUS "srsEPC build disabled")
-endif(ENABLE_SRSEPC)
+#if(ENABLE_SRSEPC)
+#  message(STATUS "Building with srsEPC")
+#  add_subdirectory(srsepc)
+#else(ENABLE_SRSEPC)
+#  message(STATUS "srsEPC build disabled")
+#endif(ENABLE_SRSEPC)
 
-add_subdirectory(test)
+#add_subdirectory(test)

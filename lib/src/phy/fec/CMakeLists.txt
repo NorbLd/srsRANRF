@@ -27,7 +27,7 @@ add_subdirectory(block)
 add_subdirectory(convolutional)
 add_subdirectory(ldpc)
 add_subdirectory(polar)
-add_subdirectory(test)
+#add_subdirectory(test)
 add_subdirectory(turbo)
 
 add_library(srsran_fec OBJECT ${FEC_SOURCES})

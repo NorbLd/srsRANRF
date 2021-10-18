@@ -41,4 +41,4 @@ set(FEC_SOURCES ${FEC_SOURCES} ${AVX2_SOURCES}
         polar/polar_rm.c
         PARENT_SCOPE)
 
-add_subdirectory(test)
+#add_subdirectory(test)

@@ -29,7 +29,7 @@
 
 namespace srsran {
 
-typedef struct {
+typedef struct phy_log_args_t {
   std::string phy_level     = "none";
   std::string phy_lib_level = "none";
   int         phy_hex_limit = -1;

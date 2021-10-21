@@ -37,7 +37,7 @@ namespace srsran {
 class channel
 {
 public:
-  typedef struct {
+  typedef struct args_t {
     // General
     bool enable = false;
 

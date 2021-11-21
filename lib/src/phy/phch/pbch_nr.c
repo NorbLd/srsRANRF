@@ -74,7 +74,7 @@
  */
 #define PBCH_NR_M (PBCH_NR_E / 2)
 
-static int pbch_nr_init_encoder(srsran_pbch_nr_t* q, const srsran_pbch_nr_args_t* args)
+int pbch_nr_init_encoder(srsran_pbch_nr_t* q, const srsran_pbch_nr_args_t* args)
 {
   // Skip encoder init if not requested
   if (!args->enable_encode) {
@@ -106,7 +106,7 @@ static int pbch_nr_init_encoder(srsran_pbch_nr_t* q, const srsran_pbch_nr_args_t
   return SRSRAN_SUCCESS;
 }
 
-static int pbch_nr_init_decoder(srsran_pbch_nr_t* q, const srsran_pbch_nr_args_t* args)
+int pbch_nr_init_decoder(srsran_pbch_nr_t* q, const srsran_pbch_nr_args_t* args)
 {
   // Skip decoder init if not requested
   if (!args->enable_decode) {
@@ -186,7 +186,7 @@ void srsran_pbch_nr_free(srsran_pbch_nr_t* q)
 /*
  *  Implements TS 38.212 Table 7.1.1-1: Value of PBCH payload interleaver pattern G ( j )
  */
-static const uint32_t G[PBCH_NR_A] = {16, 23, 18, 17, 8,  30, 10, 6,  24, 7,  0,  5,  3,  2,  1,  4,
+const uint32_t G[PBCH_NR_A] = {16, 23, 18, 17, 8,  30, 10, 6,  24, 7,  0,  5,  3,  2,  1,  4,
                                       9,  11, 12, 13, 14, 15, 19, 20, 21, 22, 25, 26, 27, 28, 29, 31};
 
 #define PBCH_SFN_PAYLOAD_BEGIN 1
@@ -194,7 +194,7 @@ static const uint32_t G[PBCH_NR_A] = {16, 23, 18, 17, 8,  30, 10, 6,  24, 7,  0,
 #define PBCH_SFN_2ND_LSB_G (G[PBCH_SFN_PAYLOAD_LENGTH + 2])
 #define PBCH_SFN_3RD_LSB_G (G[PBCH_SFN_PAYLOAD_LENGTH + 1])
 
-static void
+void
 pbch_nr_pbch_msg_pack(const srsran_pbch_nr_cfg_t* cfg, const srsran_pbch_msg_nr_t* msg, uint8_t a[PBCH_NR_A])
 {
   // Extract actual payload size
@@ -236,7 +236,7 @@ pbch_nr_pbch_msg_pack(const srsran_pbch_nr_cfg_t* cfg, const srsran_pbch_msg_nr_
     srsran_vec_fprint_byte(stdout, a, PBCH_NR_A);
   }
 }
-static void
+void
 pbch_nr_pbch_msg_unpack(const srsran_pbch_nr_cfg_t* cfg, const uint8_t a[PBCH_NR_A], srsran_pbch_msg_nr_t* msg)
 {
   if (get_srsran_verbose_level() >= SRSRAN_VERBOSE_DEBUG && !is_handler_registered()) {
@@ -280,7 +280,7 @@ pbch_nr_pbch_msg_unpack(const srsran_pbch_nr_cfg_t* cfg, const uint8_t a[PBCH_NR
   }
 }
 
-static void pbch_nr_scramble(const srsran_pbch_nr_cfg_t* cfg, const uint8_t a[PBCH_NR_A], uint8_t a_prime[PBCH_NR_A])
+void pbch_nr_scramble(const srsran_pbch_nr_cfg_t* cfg, const uint8_t a[PBCH_NR_A], uint8_t a_prime[PBCH_NR_A])
 {
   uint32_t i = 0;
   uint32_t j = 0;
@@ -324,7 +324,7 @@ static void pbch_nr_scramble(const srsran_pbch_nr_cfg_t* cfg, const uint8_t a[PB
   }
 }
 
-static int pbch_nr_polar_encode(srsran_pbch_nr_t* q, const uint8_t c[PBCH_NR_K], uint8_t d[PBCH_NR_N])
+int pbch_nr_polar_encode(srsran_pbch_nr_t* q, const uint8_t c[PBCH_NR_K], uint8_t d[PBCH_NR_N])
 {
   // Interleave
   uint8_t c_prime[SRSRAN_POLAR_INTERLEAVER_K_MAX_IL];
@@ -347,7 +347,7 @@ static int pbch_nr_polar_encode(srsran_pbch_nr_t* q, const uint8_t c[PBCH_NR_K],
   return SRSRAN_SUCCESS;
 }
 
-static int pbch_nr_polar_decode(srsran_pbch_nr_t* q, const int8_t d[PBCH_NR_N], uint8_t c[PBCH_NR_K])
+int pbch_nr_polar_decode(srsran_pbch_nr_t* q, const int8_t d[PBCH_NR_N], uint8_t c[PBCH_NR_K])
 {
   // Decode bits
   uint8_t allocated[PBCH_NR_N];
@@ -371,7 +371,7 @@ static int pbch_nr_polar_decode(srsran_pbch_nr_t* q, const int8_t d[PBCH_NR_N], 
   return SRSRAN_SUCCESS;
 }
 
-static int pbch_nr_polar_rm_tx(srsran_pbch_nr_t* q, const uint8_t d[PBCH_NR_N], uint8_t o[PBCH_NR_E])
+int pbch_nr_polar_rm_tx(srsran_pbch_nr_t* q, const uint8_t d[PBCH_NR_N], uint8_t o[PBCH_NR_E])
 {
   if (srsran_polar_rm_tx(&q->polar_rm_tx, d, o, q->code.n, PBCH_NR_E, PBCH_NR_K, PBCH_NR_POLAR_RM_IBIL) <
       SRSRAN_SUCCESS) {
@@ -386,7 +386,7 @@ static int pbch_nr_polar_rm_tx(srsran_pbch_nr_t* q, const uint8_t d[PBCH_NR_N], 
   return SRSRAN_SUCCESS;
 }
 
-static int pbch_nr_polar_rm_rx(srsran_pbch_nr_t* q, const int8_t llr[PBCH_NR_E], int8_t d[PBCH_NR_N])
+int pbch_nr_polar_rm_rx(srsran_pbch_nr_t* q, const int8_t llr[PBCH_NR_E], int8_t d[PBCH_NR_N])
 {
   if (srsran_polar_rm_rx_c(&q->polar_rm_rx, llr, d, PBCH_NR_E, q->code.n, PBCH_NR_K, PBCH_NR_POLAR_RM_IBIL) <
       SRSRAN_SUCCESS) {
@@ -406,7 +406,7 @@ static int pbch_nr_polar_rm_rx(srsran_pbch_nr_t* q, const int8_t llr[PBCH_NR_E],
   return SRSRAN_SUCCESS;
 }
 
-static void pbch_nr_scramble_tx(const srsran_pbch_nr_cfg_t* cfg,
+void pbch_nr_scramble_tx(const srsran_pbch_nr_cfg_t* cfg,
                                 uint32_t                    ssb_idx,
                                 const uint8_t               b[PBCH_NR_E],
                                 uint8_t                     b_hat[PBCH_NR_E])
@@ -433,7 +433,7 @@ static void pbch_nr_scramble_tx(const srsran_pbch_nr_cfg_t* cfg,
   srsran_sequence_state_apply_bit(&sequence_state, b, b_hat, PBCH_NR_E);
 }
 
-static void pbch_nr_scramble_rx(const srsran_pbch_nr_cfg_t* cfg,
+void pbch_nr_scramble_rx(const srsran_pbch_nr_cfg_t* cfg,
                                 uint32_t                    ssb_idx,
                                 const int8_t                b_hat[PBCH_NR_E],
                                 int8_t                      b[PBCH_NR_E])
@@ -460,7 +460,7 @@ static void pbch_nr_scramble_rx(const srsran_pbch_nr_cfg_t* cfg,
   srsran_sequence_state_apply_c(&sequence_state, b_hat, b, PBCH_NR_E);
 }
 
-static void
+void
 pbch_nr_mapping(const srsran_pbch_nr_cfg_t* cfg, const cf_t symbols[PBCH_NR_M], cf_t ssb_grid[SRSRAN_SSB_NOF_RE])
 {
   uint32_t count = 0;
@@ -512,7 +512,7 @@ pbch_nr_mapping(const srsran_pbch_nr_cfg_t* cfg, const cf_t symbols[PBCH_NR_M], 
   //  }
 }
 
-static void
+void
 pbch_nr_demapping(const srsran_pbch_nr_cfg_t* cfg, const cf_t ssb_grid[SRSRAN_SSB_NOF_RE], cf_t symbols[PBCH_NR_M])
 {
   uint32_t count = 0;

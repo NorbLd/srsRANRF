@@ -16,6 +16,7 @@
 #include <string>
 #include <type_traits>
 #include <vector>
+#include <array>
 
 // The fmt library version in the form major * 10000 + minor * 100 + patch.
 #define FMT_VERSION 70003
